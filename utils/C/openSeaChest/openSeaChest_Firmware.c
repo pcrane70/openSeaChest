@@ -253,8 +253,8 @@ int32_t main(int argc, char *argv[])
             }
             else if (strcmp(longopts[optionIndex].name, FIRMWARE_SLOT_LONG_OPT_STRING) == 0 || strcmp(longopts[optionIndex].name, FIRMWARE_BUFFER_ID_LONG_OPT_STRING) == 0)
             {
-                FIRMWARE_SLOT_FLAG = (uint8_t)atoi(optarg);
-				if (FIRMWARE_SLOT_FLAG > 7)
+                FIRMWARE_SLOT_FLAG = (int8_t)atoi(optarg);
+				if ((FIRMWARE_SLOT_FLAG > 7) || (FIRMWARE_SLOT_FLAG < 0))
 				{
 					if (toolVerbosity > VERBOSITY_QUIET)
 					{
@@ -937,7 +937,14 @@ int32_t main(int argc, char *argv[])
 					dlOptions.segmentSize = FWDL_SEGMENT_SIZE_FLAG;
 					dlOptions.firmwareFileMem = firmwareMem;
 					dlOptions.firmwareMemoryLength = firmwareFileSize;
-                    dlOptions.firmwareSlot = FIRMWARE_SLOT_FLAG;
+					if (FIRMWARE_SLOT_FLAG >= 0) // i.e. not set by user. 
+					{
+						dlOptions.firmwareSlot = FIRMWARE_SLOT_FLAG;
+					}
+					else // Set it to active slot. 
+					{
+						dlOptions.firmwareSlot = supportedFWDLModes.firmwareSlotInfo.activeSlot;
+					}
 					start_Timer(&commandTimer);
 					ret = firmware_Download(&deviceList[deviceIter], &dlOptions);
 					stop_Timer(&commandTimer);
@@ -1045,7 +1052,14 @@ int32_t main(int argc, char *argv[])
 				dlOptions.segmentSize = FWDL_SEGMENT_SIZE_FLAG;
 				dlOptions.firmwareFileMem = NULL;
 				dlOptions.firmwareMemoryLength = 0;
-                dlOptions.firmwareSlot = FIRMWARE_SLOT_FLAG;
+				if (FIRMWARE_SLOT_FLAG >= 0) // i.e. not set by user. 
+				{
+					dlOptions.firmwareSlot = FIRMWARE_SLOT_FLAG;
+				}
+				else // Set it to active slot. 
+				{
+					dlOptions.firmwareSlot = supportedFWDLModes.firmwareSlotInfo.activeSlot;
+				}                
                 if (SWITCH_FW_FLAG)
                 {   
                     dlOptions.existingFirmwareImage = true;

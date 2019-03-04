@@ -690,7 +690,7 @@ extern "C"
 
     //FW slot
     #define FIRMWARE_SLOT_FLAG firmwareSlot
-    #define FIRMWARE_SLOT_VAR uint8_t FIRMWARE_SLOT_FLAG = 0;//default to zero should be ok
+    #define FIRMWARE_SLOT_VAR int8_t FIRMWARE_SLOT_FLAG = -1;//default to zero should be ok
     #define FIRMWARE_SLOT_LONG_OPT_STRING "firmwareSlot"
     #define FIRMWARE_BUFFER_ID_LONG_OPT_STRING "fwBufferID"
     #define FIRMWARE_SLOT_LONG_OPT { FIRMWARE_SLOT_LONG_OPT_STRING, required_argument, NULL, 0 }
